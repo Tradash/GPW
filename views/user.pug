@@ -1,0 +1,25 @@
+extends layout
+
+block content
+	link(rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css')
+	link(rel='stylesheet' href='../stylesheets/newUser.css')
+	.navbar
+		a.active(href= home )
+			i.fa.fa-fw.fa-home
+			| Домой
+		.topnav-right
+			a(href='#', onclick="document.getElementById('id01').style.display='block'")
+				i.fa.fa-fw.fa-user-times
+				| Удалить аккаунт
+			a(href='/')
+				i.fa.fa-fw.fa-sign-out
+				| Выйти
+
+	h1= title
+	h3 Добро пожаловать в "Мой сад" 
+	p У вас есть растений: #{countplants}
+	p У вас есть типов растений: #{counttypeplants}
+	p Вы потратили на приобретение растений: #{summoney} руб.
+	button.btnaddtree(onclick = "window.location.href='"+home+"new/'")
+		i.fa.fa-tree
+		|  Добавить расстение

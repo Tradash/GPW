@@ -1,0 +1,57 @@
+extends layout
+
+block content
+	link(rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css')
+	link(rel='stylesheet' href='../../../stylesheets/newUser.css')
+	.navbar
+		a.active(href= home )
+			i.fa.fa-fw.fa-home
+			| Домой
+		.topnav-right
+			a(href='/')
+				i.fa.fa-fw.fa-sign-out
+				| Выйти
+
+	h3 Выберете расстение:
+	.search-container
+			input.inputFilter(type='text' placeholder='Поиск..' name='search' id='inpfield')
+			button(type='submit' onclick="setfilter()")
+				i.fa.fa-search
+			script.
+				function setfilter(){
+					const x = document.getElementById('inpfield').value;
+					document.location.href= '#{home}?f='+x;
+				}
+	each item in cursor
+		- lochref = home+'?f='+item.name+'&p='+item._id
+		button.btnselplant(onclick="location.href='"+lochref+"'")
+			i
+				table
+					tbody
+						tr
+							td #{item.name} 
+								br 
+								| #{item.name_lat}
+							td
+								img(style='width:80px', src = 'data:image/jpeg;base64, ' + item.img )
+	p #{usersel}
+	if usersel
+		form(metod='post')
+			label(for="getmetod") Как получено:
+			select#country(name="getmetod")
+				option(value="buy") Покупка
+				option(value="gift") Подарок
+				option(value="found") Взято на природе
+			br
+			label(for="tfrom") Куплено/Подарено/Взято
+			input(type='text' name='tfromf' placeholder='Откуда взято/получено...')
+			br
+			label(for="ndata") Дата
+			input(type='date' id='tdadaf' name='tdadaf')
+			script.
+				{
+				document.getElementById('tdadaf').valueAsDate = new Date();
+				}
+			br
+			input(type='submit' value='Submit')
+		

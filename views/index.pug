@@ -1,5 +1,92 @@
 extends layout
 
 block content
-  h1= title
-  p Welcome to #{title}
+	link(rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css')
+	link(rel='stylesheet' href='./stylesheets/newUser.css')
+	.navbar
+		a.active(href='/')
+			i.fa.fa-fw.fa-home
+			| Домой
+		.topnav-right
+			a(href='#', onclick="document.getElementById('id01').style.display='block'")
+				i.fa.fa-fw.fa-user-plus
+				| Регистрация
+			a(href='#', onclick="document.getElementById('id02').style.display='block'")
+				i.fa.fa-fw.fa-user
+				| Войти
+	#id01.modal
+		form.modal-content.animate(method='post', enctype= 'aplication/json')
+			.imgcontainer
+				span.close(onclick="document.getElementById('id01').style.display='none'" title="Close Modal") ×
+				img.avatar(src='./images/img_avatar2.png' alt='Avatar')
+			.container
+				label(for="newname")
+					b Имя пользователя
+				input.inputTypeText(type='text' placeholder='Введите имя пользователя' name='newname' required='')
+				label(for="psw1")
+					b Пароль
+				input(type='password' placeholder='Введите пароль' name='psw' id='psw1' required='')
+				label(for="psw2")
+					b Повторите пароль
+				input(type='password' placeholder='Повторите пароль' name='pswr' id='psw2' oninput='checkpsw()' required='')
+				button(type='submit' id='bSubmit' disabled='') Зарегистрировать
+				script.
+					function checkpsw() {
+					var x1 = document.getElementById('psw1').value;
+					var x2 = document.getElementById('psw2').value;
+					
+					if ((x2.length != 0) && (x1 === x2)) {document.getElementById('bSubmit').disabled = false;
+					document.getElementById('bSubmit').innerHTML = 'Зарегистрировать';}
+					else {document.getElementById('bSubmit').disabled = true;
+					document.getElementById('bSubmit').innerHTML = 'Пароль не совпадает';}
+					}
+				label
+					input(type='checkbox' checked='checked' name='remember')
+					| Запомнить меня
+			.container(style="background-color:#f1f1f1")
+				button.cancelbtn(type='button' onclick="document.getElementById('id01').style.display='none'") Cancel
+				//span.psw
+				//	| Forgot 
+				//	a(href="#") password?
+			script.
+			// Get the modal
+				var modal = document.getElementById('id01');
+				// When the user clicks anywhere outside of the modal, close it
+				window.onclick = function(event) {
+				if (event.target == modal) {
+				modal.style.display = "none";
+				}
+				}
+		// Форма для входа пользователя
+	#id02.modal
+		form.modal-content.animate(method='post', enctype= 'aplication/json')
+			.imgcontainer
+				span.close(onclick="document.getElementById('id02').style.display='none'" title="Close Modal") ×
+				img.avatar(src='./images/img_avatar2.png' alt='Avatar')
+			.container
+				label(for="uname")
+					b Имя пользователя
+				input.inputTypeText(type='text' placeholder='Введите имя пользователя' name='uname' required='')
+				label(for="psw1")
+					b Пароль
+				input(type='password' placeholder='Введите пароль' name='psw' id='psw' required='')
+				button(type='submit' id='bSubmit1') Зарегистрировать
+				label
+					input(type='checkbox' checked='checked' name='remember')
+					| Запомнить меня
+			.container(style="background-color:#f1f1f1")
+				button.cancelbtn(type='button' onclick="document.getElementById('id02').style.display='none'") Cancel
+				//span.psw
+				//	| Forgot 
+				//	a(href="#") password?
+			script.
+			// Get the modal
+				var modal = document.getElementById('id02');
+				// When the user clicks anywhere outside of the modal, close it
+				window.onclick = function(event) {
+				if (event.target == modal) {
+				modal.style.display = "none";
+				}
+				}
+	h1= title
+	p Welcome to #{title}

@@ -1,0 +1,16 @@
+extends layout
+
+block content
+	link(rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css')
+	.navbar
+		a.active(href='#')
+			i.fa.fa-fw.fa-home
+			| Домой
+		a(href='#')
+			i.fa.fa-fw.fa-search
+			| Регистрация
+		a(href='#')
+			i.fa.fa-fw.fa-user
+			| Войти
+	h1= title
+	p Welcome to #{title}
