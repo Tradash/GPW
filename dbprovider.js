@@ -13,7 +13,8 @@ const dbPort = 27017;
 const dbName = 'Test';
 const collName = 'Garden_Plant';
 const collTmp = 'temp_pict';
-const collDB = 'GardenDB'
+const collDB = 'GardenDB';
+const collUser = 'UserData';
 
 
 const read_pict = (buff) => {
@@ -44,5 +45,6 @@ module.exports = {
 	collTmp: collTmp,
 	loadFR: loadFR,
 	url: url,
-	dbName: dbName
+	dbName: dbName,
+	collUser: collUser
 }

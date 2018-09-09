@@ -190,9 +190,33 @@ span.psw {
 }
 
 .inputFilter {
+		font-size: 16px;
     padding: 12px 20px;
     margin: 8px 0;
     display: inline-block;
     border: 1px solid #ccc;
     box-sizing: border-box;
+}
+
+.btnsave {
+  float: left;
+  text-align: center;
+  padding: 12px;
+  color: white;
+  text-decoration: none;
+  font-size: 17px;
+}
+.lbl1 {
+	font-size: 17px;
+	margin: 4px 20px
+}
+
+.inputnumber {
+		font-size: 16px;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+    text-align: right;
 }

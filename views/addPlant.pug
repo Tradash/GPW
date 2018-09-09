@@ -20,10 +20,11 @@ block content
 			script.
 				function setfilter(){
 					const x = document.getElementById('inpfield').value;
-					document.location.href= '#{home}?f='+x;
+					document.location.href= '#{home}new/?f='+x;
 				}
 	each item in cursor
-		- lochref = home+'?f='+item.name+'&p='+item._id
+		- lochref = home+'new/?f='+item.name+'&p='+item._id
+		- fid = item._id
 		button.btnselplant(onclick="location.href='"+lochref+"'")
 			i
 				table
@@ -34,24 +35,34 @@ block content
 								| #{item.name_lat}
 							td
 								img(style='width:80px', src = 'data:image/jpeg;base64, ' + item.img )
-	p #{usersel}
 	if usersel
-		form(metod='post')
-			label(for="getmetod") Как получено:
-			select#country(name="getmetod")
-				option(value="buy") Покупка
-				option(value="gift") Подарок
-				option(value="found") Взято на природе
+		form(method='post' enctype='aplication/json')
+			input(type='hidden' name = 'fid' value = fid)
+			input(type='hidden' name = 'fuser' value = user)
+			label.lbl1(for="fsource") Как получено:
+			select.inputFilter(name="fsource")
+				option(value="Покупка") Покупка
+				option(value="Подарок") Подарок
+				option(value="Взято на природе") Взято на природе
+				option(value="Взято в саду") Взято в саду
 			br
-			label(for="tfrom") Куплено/Подарено/Взято
-			input(type='text' name='tfromf' placeholder='Откуда взято/получено...')
+			label.lbl1(for="ffrom") Куплено/Подарено/Взято:
+			input.inputFilter(type='text' name='ffrom' placeholder='Откуда взято/получено...' required='')
 			br
-			label(for="ndata") Дата
-			input(type='date' id='tdadaf' name='tdadaf')
+			label.lbl1(for="fdate") Дата:
+			input.inputFilter(type='date' id='fdate' name='fdate')
 			script.
 				{
-				document.getElementById('tdadaf').valueAsDate = new Date();
+				document.getElementById('fdate').valueAsDate = new Date();
 				}
 			br
-			input(type='submit' value='Submit')
+			label.lbl1(for="fvol") Количество:
+			input.inputnumber(type='number' name='fvol' id='fvol' placeholder='Введите количество...' min='1' required='')
+			br
+			label.lbl1(for="fprice") Цена за единицу:
+			input.inputnumber(type='number' name='fprice' id='fprice' step='0.01' value='0' required='')
+			br
+			button.btnsave(type='submit')
+				i.fa.fa-fw.fa-save
+				| Сохранить
 		
