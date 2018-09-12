@@ -15,7 +15,8 @@ block content
 				i.fa.fa-fw.fa-user
 				| Войти
 	#id01.modal
-		form.modal-content.animate(method='post', enctype= 'aplication/json')
+		// action='/newuser'
+		form.modal-content.animate(method='post', enctype= 'aplication/json' action='/newuser')
 			.imgcontainer
 				span.close(onclick="document.getElementById('id01').style.display='none'" title="Close Modal") ×
 				img.avatar(src='./images/img_avatar2.png' alt='Avatar')
@@ -40,9 +41,6 @@ block content
 					else {document.getElementById('bSubmit').disabled = true;
 					document.getElementById('bSubmit').innerHTML = 'Пароль не совпадает';}
 					}
-				label
-					input(type='checkbox' checked='checked' name='remember')
-					| Запомнить меня
 			.container(style="background-color:#f1f1f1")
 				button.cancelbtn(type='button' onclick="document.getElementById('id01').style.display='none'") Cancel
 				//span.psw
@@ -59,18 +57,18 @@ block content
 				}
 		// Форма для входа пользователя
 	#id02.modal
-		form.modal-content.animate(method='post', enctype= 'aplication/json')
+		form.modal-content.animate(method='post', enctype= 'aplication/json'  action='/login')
 			.imgcontainer
 				span.close(onclick="document.getElementById('id02').style.display='none'" title="Close Modal") ×
 				img.avatar(src='./images/img_avatar2.png' alt='Avatar')
 			.container
-				label(for="uname")
+				label(for="login")
 					b Имя пользователя
-				input.inputTypeText(type='text' placeholder='Введите имя пользователя' name='uname' required='')
-				label(for="psw1")
+				input.inputTypeText(type='text' placeholder='Введите имя пользователя' name='login' required='')
+				label(for="password")
 					b Пароль
-				input(type='password' placeholder='Введите пароль' name='psw' id='psw' required='')
-				button(type='submit' id='bSubmit1') Зарегистрировать
+				input(type='password' placeholder='Введите пароль' name='password' id='psw' required='')
+				button(type='submit' id='bSubmit1') Войти
 				label
 					input(type='checkbox' checked='checked' name='remember')
 					| Запомнить меня
@@ -89,4 +87,4 @@ block content
 				}
 				}
 	h1= title
-	p Welcome to #{title}
+	p Welcome to #{title}  

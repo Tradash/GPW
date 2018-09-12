@@ -6,6 +6,8 @@ const mongodb = require('mongodb');
 const MongoClient = require('mongodb').MongoClient;
 const buffer = require('buffer')
 const sharp = require('sharp');
+var level = require('level');
+const crypto = require('crypto');
 
 const url = 'mongodb://localhost:27017';
 const dbUrl = 'localhost';
@@ -15,6 +17,39 @@ const collName = 'Garden_Plant';
 const collTmp = 'temp_pict';
 const collDB = 'GardenDB';
 const collUser = 'UserData';
+
+const levelDB='./ldb';
+
+
+
+//Поиск пользователя в БД 
+const findUser = async(name) => {
+	let result = {data:null, err: null};
+	let db;
+ 	try {
+		db = level(levelDB, {valueEncoding: 'json'});
+		result.data = await db.get(name);
+	}
+	catch (err) { result.err = err; };
+	db.close();
+	return result;
+};
+
+// Добавление пользователя в БД
+const addUser = async (name, password) => {
+	let result = {data:null, err: null};
+	let db, salt, hashPassword;
+	try {
+		db = level(levelDB, {valueEncoding: 'json'});
+		salt = Math.round((new Date().valueOf() * Math.random()))+'';
+		hashPassword = crypto.createHash('sha512').update(salt+password).digest('hex');
+		result.data = await db.put(name, {salt: salt, psw: hashPassword });
+	}
+	catch (err) { return result.err = err; };
+	db.close();
+	return result;
+};
+
 
 
 const read_pict = (buff) => {
@@ -46,5 +81,7 @@ module.exports = {
 	loadFR: loadFR,
 	url: url,
 	dbName: dbName,
-	collUser: collUser
+	collUser: collUser,
+	findUser: findUser,
+	addUser: addUser
 }

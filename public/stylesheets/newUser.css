@@ -220,3 +220,10 @@ span.psw {
     box-sizing: border-box;
     text-align: right;
 }
+
+.tdinfo {
+	vertical-align:top;
+	position:relative;
+	font-size: 16px;
+	padding: 5px 15px;
+}

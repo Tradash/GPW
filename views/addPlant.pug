@@ -4,7 +4,7 @@ block content
 	link(rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css')
 	link(rel='stylesheet' href='../../../stylesheets/newUser.css')
 	.navbar
-		a.active(href= home )
+		a.active(href= '/user' )
 			i.fa.fa-fw.fa-home
 			| Домой
 		.topnav-right
@@ -20,10 +20,10 @@ block content
 			script.
 				function setfilter(){
 					const x = document.getElementById('inpfield').value;
-					document.location.href= '#{home}new/?f='+x;
+					document.location.href= '/user/addplant?f='+x;
 				}
 	each item in cursor
-		- lochref = home+'new/?f='+item.name+'&p='+item._id
+		- lochref = '/user/addplant/?f='+item.name+'&p='+item._id
 		- fid = item._id
 		button.btnselplant(onclick="location.href='"+lochref+"'")
 			i

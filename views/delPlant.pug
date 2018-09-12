@@ -1,0 +1,55 @@
+extends layout
+
+block content
+	link(rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css')
+	link(rel='stylesheet' href='../../../stylesheets/newUser.css')
+	.navbar
+		a.active(href= '/user' )
+			i.fa.fa-fw.fa-home
+			| Домой
+		.topnav-right
+			a(href='/')
+				i.fa.fa-fw.fa-sign-out
+				| Выйти
+
+	table(style='width:100%', border='1')
+		tbody
+			tr 
+				td(style='width:1%')
+					img(src='data:image/jpeg;base64, '+cursor.img, , width = '150px')
+				td(class='tdinfo')
+					p Наименование: <strong>#{cursor.name}</strong>
+					p Латинское наименование: <strong>#{cursor.name_lat}</strong>
+					a(href = cursor.url) Википедия
+					p Количество расстений: <strong>#{detail.colplant}</strong>
+					p Всего потрачено на приобретение: <strong>#{detail.totalsum}</strong>
+
+		form(method='post' enctype='aplication/json')
+			input(type='hidden' name = 'fid' value = fid)
+			input(type='hidden' name = 'fuser' value = user)
+			label.lbl1(for="fsource") Причина:
+			select.inputFilter(name="fsource")
+				option(value="Продано") Продано
+				option(value="Подарок") Подарок
+				option(value="Погибло") Погибло
+				option(value="Выбрашено") Выбрашено
+			br
+			label.lbl1(for="ffrom") Куда ушло/отправлено:
+			input.inputFilter(type='text' name='ffrom' placeholder='Куда ушло/отправлено...' required='')
+			br
+			label.lbl1(for="fdate") Дата:
+			input.inputFilter(type='date' id='fdate' name='fdate')
+			script.
+				{
+				document.getElementById('fdate').valueAsDate = new Date();
+				}
+			br
+			label.lbl1(for="fvol") Количество: (В наличии: 
+				| <strong> #{detail.colplant} </strong>
+				| )
+			input.inputnumber(type='number' name='fvol' id='fvol' placeholder='Введите количество...' min='1' max='${detail.colplant}' required='')
+			br
+			button.btnsave(type='submit')
+				i.fa.fa-fw.fa-save
+				| Сохранить
+		

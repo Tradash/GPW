@@ -4,7 +4,7 @@ block content
 	link(rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css')
 	link(rel='stylesheet' href='../../stylesheets/newUser.css')
 	.navbar
-		a.active(href= home )
+		a.active(href= '/user' )
 			i.fa.fa-fw.fa-home
 			| Домой
 		.topnav-right
@@ -15,12 +15,11 @@ block content
 				i.fa.fa-fw.fa-sign-out
 				| Выйти
 
-	h1= title
-	h3 Добро пожаловать в "Мой сад" 
-	p У вас есть растений: #{countplants}
-	p У вас есть типов растений: #{counttypeplants}
+	h1 Добро пожаловать в "Мой сад" 
+	p У вас есть всего  растений: #{countplants}
+	p У вас есть разных типов растений: #{counttypeplants}
 	p Вы потратили на приобретение растений: #{summoney} руб.
-	button.btnaddtree(onclick = "window.location.href='"+home+"new/'")
+	button.btnaddtree(onclick = "window.location.href='/user/addplant'")
 		i.fa.fa-tree
 		|  Добавить расстение
 	.search-container
@@ -30,5 +29,28 @@ block content
 			script.
 				function setfilter(){
 					const x = document.getElementById('inpfield').value;
-					document.location.href= '#{home}?f='+x;
+					document.location.href= '/user?f='+x;
 				}
+				
+	table(style='width:100%', border='1')
+		tbody
+			each item in cursor
+				tr 
+					td(style='width:1%')
+						img(src='data:image/jpeg;base64, '+item.img, , width = '150px')
+					td(class='tdinfo')
+						p Наименование: <strong>#{item.name}</strong>
+						p Латинское наименование: <strong>#{item.name_lat}</strong>
+						a(href = item.url) Википедия
+						p Количество расстений: <strong>#{item.colplant}</strong>
+						p Всего потрачено на приобретение: <strong>#{item.totalsum}</strong>
+						.navbar(style='vertical-align:bottom')
+							.topnav-right
+								a(href='/user/delplant/?p='+item.id)
+									i.fa.fa-tree
+									|  Выбытие растения
+								a(href='/user/?p='+item.id+'&do=detail')
+									i.fa.fa-tree
+									|  Показать движение по приходу/уходу
+	//p #{infotext}
+	h3 конец страницы
