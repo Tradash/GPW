@@ -4,7 +4,7 @@ const fsp = require('fs').promises;
 
 const mongodb = require('mongodb');
 const MongoClient = require('mongodb').MongoClient;
-const buffer = require('buffer')
+const buffer = require('buffer');
 const sharp = require('sharp');
 var level = require('level');
 const crypto = require('crypto');
@@ -45,11 +45,22 @@ const addUser = async (name, password) => {
 		hashPassword = crypto.createHash('sha512').update(salt+password).digest('hex');
 		result.data = await db.put(name, {salt: salt, psw: hashPassword });
 	}
-	catch (err) { return result.err = err; };
+	catch (err) { result.err = err; };
 	db.close();
 	return result;
 };
+// Удаление пользователя из БД
 
+const delUser = async (name) => {
+	let result = {data:null, err: null};
+	try {
+		db = level(levelDB, {valueEncoding: 'json'});
+		result.data = await db.del(name);
+	}
+	catch (err) { result.err = err; };
+	db.close();
+	return result;
+}
 
 
 const read_pict = (buff) => {
@@ -83,5 +94,6 @@ module.exports = {
 	dbName: dbName,
 	collUser: collUser,
 	findUser: findUser,
-	addUser: addUser
+	addUser: addUser,
+	delUser: delUser
 }

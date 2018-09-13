@@ -8,10 +8,10 @@ block content
 			i.fa.fa-fw.fa-home
 			| Домой
 		.topnav-right
-			a(href='#', onclick="document.getElementById('id01').style.display='block'")
+			a(href='#' onclick="document.getElementById('id03').style.display='block'")
 				i.fa.fa-fw.fa-user-times
 				| Удалить аккаунт
-			a(href='/')
+			a(href='/user/exit')
 				i.fa.fa-fw.fa-sign-out
 				| Выйти
 
@@ -47,10 +47,26 @@ block content
 						.navbar(style='vertical-align:bottom')
 							.topnav-right
 								a(href='/user/delplant/?p='+item.id)
-									i.fa.fa-tree
+									i.fa.fa-minus-square
 									|  Выбытие растения
-								a(href='/user/?p='+item.id+'&do=detail')
-									i.fa.fa-tree
+								a(href='/user/detail/'+item.id)
+									i.fa.fa-list-ol
 									|  Показать движение по приходу/уходу
 	//p #{infotext}
 	h3 конец страницы
+	
+	#id03.modal
+		form.modal-content.animate(method='post', enctype= 'aplication/json'  action='/user/deluser')
+			.container
+				h3 Удаление учетной записи пользователя
+				h1 Будет удалена все информация связанная с данной учетной записью, а также сама учетная запись без возможности восстановления.
+				//.container(style="background-color:#f1f1f1")
+				button.cancelbtn(type='submit' id='bSubmit1') Удалить все информацию
+				button(type='button' onclick="document.getElementById('id03').style.display='none'") Отменить
+				script.
+					var modal = document.getElementById('id03');
+					window.onclick = function(event) {
+					if (event.target == modal) {
+					modal.style.display = "none";
+					}
+					}

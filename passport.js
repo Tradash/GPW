@@ -1,8 +1,6 @@
-const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const passportJWT = require("passport-jwt");
 const JWTStrategy   = passportJWT.Strategy;
-const ExtractJWT = passportJWT.ExtractJwt;
 const jwt = require('jsonwebtoken');
 const findUser=require('./dbprovider.js').findUser;
 const crypto = require('crypto');
@@ -55,7 +53,7 @@ let token;
 try{
 	token = jwt.verify(getjwt(req), secretToken);
 	}
-	catch (err) {return {err: 'bad token'}}
+	catch (err) {return {err: 'bad token'};}
 	return token.user;
 };
 

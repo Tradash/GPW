@@ -1,0 +1,79 @@
+extends layout
+
+block content
+	link(rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css')
+	link(rel='stylesheet' href='../../../stylesheets/newUser.css')
+	.navbar
+		a.active(href= '/user' )
+			i.fa.fa-fw.fa-home
+			| Домой
+		.topnav-right
+			a(href='/user/exit')
+				i.fa.fa-fw.fa-sign-out
+				| Выйти
+	h3 Детализация движения по расстению:
+	table(style='width:100%', border='2')
+		tbody
+			tr 
+				td(style='width:1%')
+					img(src='data:image/jpeg;base64, '+cursor.img, , width = '100px')
+				td(class='tdinfo')
+					p Наименование: <strong>#{cursor.name}</strong>
+					p Латинское наименование: <strong>#{cursor.name_lat}</strong>
+					a(href = cursor.url) Википедия
+					p Количество расстений: <strong>#{colplant}</strong>
+					p Всего потрачено на приобретение: <strong>#{sumplant}</strong>
+	- i = 1
+	table(style='width:100%', border='2')
+		tbody
+			tr 
+				th
+					p ##
+				th
+					p Дата
+				th
+					p Операция
+				th
+					p Куда/Откуда
+				th
+					p Количество
+				th
+					p Цена
+				each item in detail
+					- idd = item._id
+					if item.fvol>=0
+						tr.trplus
+							td.tdc
+								p #{i}
+								- i = i + 1
+							td.tdc
+								p #{item.fdate}
+							td.tdl
+								p #{item.fsource}
+							td.tdl
+								p #{item.ffrom}
+							td.tdr
+								p #{item.fvol}
+							td.tdr
+								p #{item.fprice}
+					else
+						tr.trminus
+							td.tdc
+								p #{i}
+								- i = i + 1
+							td.tdc
+								p #{item.fdate}
+							td.tdl
+								p #{item.fsource}
+							td.tdl
+								p #{item.ffrom}
+							td.tdr
+								p #{item.fvol}
+							td.tdr
+								p #{item.fprice}
+	if colplant>0
+		.navbar
+			a(href= '/user/detail/' +plantid+'/delete/'+idd)
+				i.fa.fa-fw.fa-trash
+				| Удалить последнюю операцию
+		

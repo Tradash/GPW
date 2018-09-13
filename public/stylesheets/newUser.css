@@ -225,5 +225,27 @@ span.psw {
 	vertical-align:top;
 	position:relative;
 	font-size: 16px;
-	padding: 5px 15px;
+	padding: 5px 10px;
+}
+
+.tdc {
+	text-align: center;
+	padding: 5px 10px;
+}
+
+.tdr {
+	text-align: right;
+	padding: 5px 10px;
+}
+
+.tdl {
+	text-align: left;
+	padding: 5px 10px;
+}
+
+.trplus {
+	background-color:palegreen;
+}
+.trminus {
+	background-color:moccasin;
 }
