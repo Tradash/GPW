@@ -1,3 +1,4 @@
 module.exports = {
-    "extends": "standard"
+    "extends": "google",
+    "parserOptions": {"ecmaVersion": 8 }
 };
