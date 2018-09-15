@@ -8,21 +8,20 @@ const secretToken = require('../passport.js').secretToken;
 /* POST login. */
 router.post('/', function(req, res, next) {
   passport.authenticate('local', {session: false}, (err, user, info) => {
-    console.log('Проверка юзверя', user, info, );
+    //console.log('Проверка юзверя', user, info, );
     if (err || !user) {
-      return res.status(400).json({
-        message: 'Something is not right',
-        user: user,
-      });
+      return res.render('index', { title: 'Мой Сад',
+      		inform: 'Неправильный логин или пароль' });
     };
     req.login(user, {session: false}, (err) => {
       if (err) {
-        res.send(err);
+        return res.render('index', { title: 'Мой Сад',
+      		inform: 'Неправильный логин или пароль' });
       }
-      console.log('Создание куки', user );
+      //console.log('Создание куки', user );
       const token = jwt.sign({user: user}, secretToken);
       res.cookie('jwt', token);
-      console.log('Кука создана', user, token );
+      //console.log('Кука создана', user, token );
       // console.log(res);
       return res.redirect('/user');
       // res.json({user, token});

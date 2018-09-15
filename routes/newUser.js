@@ -15,7 +15,8 @@ router.post('/', (req, res, next) => {
               	// eslint-disable-next-line
                 res.render('index', {title: 'На сайте возникли технические проблемы, попробуйте зайти позже. '});
               } else {
-                res.render('index', {title: 'Учетная запись создана. '});
+                res.render('index', {title: 'Мой сад',
+                		inform: 'Учетная запись создана.' });
               }
             });
   			} else {
@@ -24,7 +25,9 @@ router.post('/', (req, res, next) => {
   			}
     } else {
     	// eslint-disable-next-line
-  			res.render('index', {title: 'Имя:'+req.body.newname+' уже используется. Попробуйте другое имя. '});
+  			res.render('index', {title: 'Мой сад',
+  					// eslint-disable-next-line
+  					inform: 'Имя:'+req.body.newname+' уже используется. Попробуйте другое имя. '});
   		}
   });
 });

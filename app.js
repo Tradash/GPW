@@ -6,7 +6,6 @@ const logger = require('morgan');
 const passport = require('passport');
 const auth = require('./routes/auth');
 const indexRouter = require('./routes/index');
-const usersRouter = require('./routes/users');
 const newUser = require('./routes/newUser');
 const user = require('./routes/user');
 const locStrtg = require('./passport.js').locStrtg;
@@ -26,7 +25,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 passport.use(locStrtg);
 passport.use(jwtStrtg);
 
-app.use('/users', usersRouter);
 app.use('/user', passport.authenticate('jwt', {session: false}), user);
 app.use('/newuser', newUser);
 app.use('/login', auth);

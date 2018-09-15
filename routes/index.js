@@ -10,7 +10,8 @@ let hashPassword;
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Мой Сад' });
+  res.render('index', { title: 'Мой Сад',
+  		inform: 'Войдите под своей учетной записью или пройдите регистрацию для получения учетной записи.' });
 });
 
 module.exports = router;

@@ -13,6 +13,9 @@ let myquery; let ma; let i; let mq;
 router.get('/', function(req, res, next) {
   const id = getIdFromToken(req);
   doItDB((err, db, cli)=>{
+  	if (err) {
+      return next(err);
+    }
     // Получаем список всех расстений попадающих в фильтр
     db.collection(collUser).aggregate([
       {$match: {'fuser': id}},
@@ -21,6 +24,11 @@ router.get('/', function(req, res, next) {
         totalsum: {$sum: {$multiply: ['$fvol', '$fprice']}}},
       }])
         .toArray(function(err, pc) {
+        	if (err) {
+        		const error = new Error('Ошибка при доступе к БД');
+        		error.httpStatusCode = 400;
+        		return nexr(error);
+      		}
           if (pc.length === 0) { // У юзера нет записей
             res.render('user', {
               title: 'Есть такой пользователь:'+id,
@@ -46,6 +54,11 @@ router.get('/', function(req, res, next) {
               mq = {'$or': ma};
             }
             db.collection(collName).find(mq).toArray(function(err, mainbd) {
+            	if (err) {
+        				const error = new Error('Ошибка при доступе к БД');
+        				error.httpStatusCode = 400;
+        				return nexr(error);
+      				}
               const obRes = mainbd.reduce((result, elem)=> {
                 const f = pc.filter((el)=> (el._id === elem._id.toString()));
                 const newE = {id: elem._id,
@@ -81,6 +94,9 @@ router.get('/addplant', function(req, res, next) {
     myquery = {};
   }
   doItDB((err, db, cli)=>{
+  	if (err) {
+      return next(err);
+    }
     db.collection(collName).find(myquery).toArray(function(err, cursor) {
       if (err) {
         const error = new Error('Ошибка при выборке в БД растений');
@@ -109,6 +125,9 @@ router.post('/addplant', function(req, res, next) {
     fprice: Number(req.body.fprice),
   };
   doItDB((err, db, cli)=>{
+  	if (err) {
+      return next(err);
+    }
     db.collection(collUser).insertOne(rec, (err, rez) => {
       if (err) {
         const error = new Error('Ошибка при сохранении нового поступления');
@@ -128,6 +147,9 @@ router.get('/delplant', function(req, res, next) {
   myquery = {_id: new mongodb.ObjectID(req.query.p)};
   // Выбираем данные по расстению
   doItDB((err, db, cli)=>{
+  	if (err) {
+      return next(err);
+    }
     db.collection(collName).find(myquery).toArray(function(err, cursor) {
       if (err) {
         const error = new Error('Ошибка, не найдено расстение в БД');
@@ -166,6 +188,9 @@ router.post('/delplant', function(req, res, next) {
     fprice: 0,
   };
   doItDB((err, db, cli)=>{
+  	if (err) {
+      return next(err);
+    }
     db.collection(collUser).insertOne(rec, (err, rez) => {
       if (err) {
         const error = new Error('Ошибка при сохранении нового выбытия');
@@ -182,6 +207,9 @@ router.get('/detail/:idd', function(req, res, next) {
   myquery = {_id: new mongodb.ObjectID(req.params.idd)};
   // Выбираем данные по расстению
   doItDB((err, db, cli)=>{
+  	if (err) {
+      return next(err);
+    }
     db.collection(collName).find(myquery).toArray(function(err, cursor) {
       if (err) {
         const error = new Error('Ошибка, не найдено расстение в БД');
@@ -192,6 +220,11 @@ router.get('/detail/:idd', function(req, res, next) {
       db.collection(collUser).find(
           {$and: [{'fuser': id}, {'fid': req.params.idd}]})
           .toArray(function(err, detail) {
+						if (err) {
+        			const error = new Error('Ошибка при выполнении выборки операций');
+        			error.httpStatusCode = 400;
+			        return next(error);
+			      }
             res.render('showDetail', {
               cursor: cursor[0],
               detail: detail,
@@ -208,6 +241,9 @@ router.get('/detail/:idd', function(req, res, next) {
 router.get('/detail/:idd/delete/:idoper', function(req, res, next) {
   myquery = {_id: new mongodb.ObjectID(req.params.idoper)};
   doItDB((err, db, cli)=>{
+  	if (err) {
+      return next(err);
+    }
     db.collection(collUser).deleteOne(myquery, function(err, cursor) {
       if (err) {
         const error = new Error('Ошибка при удалении операции');
@@ -230,18 +266,23 @@ router.post('/deluser', function(req, res, next) {
   myquery = {fuser: id};
   // Удаляем все записи операций пользователя
   doItDB((err, db, cli)=>{
+  	if (err) {
+      return next(err);
+    }
     db.collection(collUser).deleteMany(myquery, function(err, cursor) {
       if (err) {
-        const error = new Error('Ошибка при удалении операции');
+        const error = new Error('Ошибка при удалении операций пользователя');
         error.httpStatusCode = 400;
         return next(error);
       }
       delUser(id)
           .then((result) => {
-            if (result.err) { // Ошибка при добавление учетки
+            if (result.err) { // Ошибка при удалении учетки
               // eslint-disable-next-line
-              res.render('index', {title: 'На сайте возникли технические проблемы, попробуйте зайти позже. '});
-            } else {
+              const error = new Error('Ошибка при удалении учетки');
+        			error.httpStatusCode = 400;
+        			return next(error);
+      			} else {
               res.redirect('/');
             }
           });
