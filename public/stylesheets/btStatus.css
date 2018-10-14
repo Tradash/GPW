@@ -1,0 +1,12 @@
+.btStatus {
+	/*overflow: auto;
+	position: fixed;*/
+	background-color: #ccc;
+	bottom: 0;
+	width: 100%;
+}
+
+.lbold {
+	padding: 5px;
+	font-weight: bold;
+}

@@ -1,0 +1,29 @@
+link(rel='stylesheet' href='./stylesheets/btStatus.css')
+script(src='./javascripts/socket.io/socket.io.js')
+script.
+	const socket = io.connect('http://'+window.location.hostname+':4200');
+	socket.on('infa1', (data) => {
+		document.getElementById('i1').innerHTML=data
+	});
+	socket.on('infa2', (data) => {
+		document.getElementById('i2').innerHTML=data
+	});
+	socket.on('infa3', (data) => {
+		document.getElementById('i3').innerHTML=data
+	});
+	socket.on('infa4', (data) => {
+		document.getElementById('i4').innerHTML=data
+	});
+.btStatus
+	label Количество пользователей всего:
+	label#i1.lbold 00000
+	br
+	label Количество пользователей онлайн:
+	label#i2.lbold 00001
+	br
+	label Видов растений в БД:
+	label#i3.lbold 00002
+	br
+	label Записей внесено пользователями всего:
+	label#i4.lbold 00003
+		

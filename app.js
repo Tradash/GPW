@@ -10,8 +10,26 @@ const newUser = require('./routes/newUser');
 const user = require('./routes/user');
 const locStrtg = require('./passport.js').locStrtg;
 const jwtStrtg = require('./passport.js').jwtStrtg;
+const countUser = require('./dbprovider.js').countUser;
+const getRecordCount = require('./dbprovider.js').getRecordCount;
 
 const app = express();
+
+const http = require('http').Server(app);
+const io = require('socket.io')(http);
+http.listen(4200);
+
+io.sockets.on('connection', (socket) => {
+  console.log('User connected', socket.conn.server.clientsCount);
+  setInterval(()=> {
+    countUser((d) => { socket.emit('infa1', d.data); });
+    socket.emit('infa2', socket.conn.server.clientsCount); 
+    getRecordCount(1, (d) => { socket.emit('infa3', d); })
+    getRecordCount(2, (d) => { socket.emit('infa4', d); })  
+  }, 10000);
+  
+  //socket.emit('infa1', countUser);
+})
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));

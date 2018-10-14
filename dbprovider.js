@@ -10,6 +10,31 @@ const collUser = 'UserData';
 
 const levelDB='./ldb';
 
+//Подсчет количества записей в коллекциях
+const getRecordCount = (coll, cb) => {
+  let result = 0
+  doItDB((err, db, cli)=>{
+    db.collection(coll !== 1 ? collUser: collName).countDocuments((err, recCount) => {
+      if (!err) {
+        result = recCount;
+      }
+      cb(result);
+    });
+  });
+}
+
+//Подсчет зарегистрированных пользователей в системе
+const countUser = (cb) => {
+  let result = {data: null, err: null};
+  let db;
+  var counter = 0;
+  db = level(levelDB, {valueEncoding: 'json'});
+  db.createReadStream()
+    .on('data', () => { counter++ })
+    .on('close', () => { console.log('close', counter); db.close(); cb(result)})
+    .on('end', () => { console.log('end'); result.data = counter})
+    .on('error', (err) => { console.log('error');  result.err = err; db.close(); cb(result)})
+}
 
 // Поиск пользователя в БД
 const findUser = async (name) => {
@@ -92,4 +117,6 @@ module.exports = {
   findUser: findUser,
   addUser: addUser,
   delUser: delUser,
+  countUser: countUser,
+  getRecordCount: getRecordCount
 };
