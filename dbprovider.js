@@ -24,15 +24,15 @@ const getRecordCount = (coll, cb) => {
 }
 
 //Подсчет зарегистрированных пользователей в системе
-const countUser = (cb) => {
+const countUser = (id, cb) => {
   let result = {data: null, err: null};
   let db;
   var counter = 0;
   db = level(levelDB, {valueEncoding: 'json'});
   db.createReadStream()
     .on('data', () => { counter++ })
-    .on('close', () => { console.log('close', counter); db.close(); cb(result)})
-    .on('end', () => { console.log('end'); result.data = counter})
+    .on('close', () => { db.close(); cb(result)})
+    .on('end', () => { result.data = counter})
     .on('error', (err) => { console.log('error');  result.err = err; db.close(); cb(result)})
 }
 
@@ -66,8 +66,8 @@ const addUser = async (name, password) => {
   db.close();
   return result;
 };
-// Удаление пользователя из БД
 
+// Удаление пользователя из БД
 const delUser = async (name) => {
   let result = {data: null, err: null};
   try {
@@ -80,10 +80,11 @@ const delUser = async (name) => {
   return result;
 };
 
-
+// Конвертация буфера в текст
 const readPict = (buff) => {
   return new Buffer(buff).toString('base64');
 };
+
 // Загрузка изображения в буфер и проведение ресайзинга
 const loadFR = (name) => {
   const prms = name.map((elem) => sharp(elem)

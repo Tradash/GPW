@@ -6,6 +6,7 @@ const addUser=require('../dbprovider.js').addUser;
 
 /* GET home page. */
 router.post('/', (req, res, next) => {
+  req.ioInfo.emit('broadcast', (new Date()).toUTCString()+' - Пользователь создал новую учетную запись');
   findUser(req.body.newname).then((result) => {
     if (result.err) {
       if (result.err.notFound) { // Нет такой учетки

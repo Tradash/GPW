@@ -12,6 +12,7 @@ let myquery; let ma; let i; let mq;
 /* GET users listing. */
 router.get('/', function(req, res, next) {
   const id = getIdFromToken(req);
+  req.ioInfo.emit('broadcast', (new Date()).toUTCString() + ' '+req.connection.remoteAddress+' - Пользователь открыл основную страницу сайта');
   doItDB((err, db, cli)=>{
   	if (err) {
       return next(err);
@@ -86,6 +87,7 @@ router.get('/', function(req, res, next) {
 
 router.get('/addplant', function(req, res, next) {
   const id = getIdFromToken(req);
+  req.ioInfo.emit('broadcast', (new Date()).toUTCString() + ' '+req.connection.remoteAddress+' - Пользователь добавляет растение');
   if (req.query.f) { // Установлен фильтр
     myquery = {'$or': [
       {name: {'$regex': req.query.f, '$options': 'i'}},
@@ -115,6 +117,7 @@ router.get('/addplant', function(req, res, next) {
 
 router.post('/addplant', function(req, res, next) {
   // console.log('===',req.body);
+  req.ioInfo.emit('broadcast', (new Date()).toUTCString() + ' '+req.connection.remoteAddress+' - Пользователь добавил растение');
   const rec = {
     fid: req.body.fid,
     fuser: req.body.fuser,
@@ -140,6 +143,7 @@ router.post('/addplant', function(req, res, next) {
 });
 
 router.get('/delplant', function(req, res, next) {
+  req.ioInfo.emit('broadcast', (new Date()).toUTCString() + ' '+req.connection.remoteAddress+' - Пользователь оформляет выбытие растения');
   const id = getIdFromToken(req);
   if (!req.query.p) {
     return res.redirect('/user');
@@ -175,6 +179,7 @@ router.get('/delplant', function(req, res, next) {
 });
 
 router.post('/delplant', function(req, res, next) {
+  req.ioInfo.emit('broadcast', (new Date()).toUTCString() + ' '+req.connection.remoteAddress+' - Пользователь оформил выбытие растения');
   if (!req.query.p) {
     return res.redirect('/user');
   } // Если не передан параметр выходим
@@ -204,6 +209,7 @@ router.post('/delplant', function(req, res, next) {
 
 router.get('/detail/:idd', function(req, res, next) {
   const id = getIdFromToken(req);
+  req.ioInfo.emit('broadcast', (new Date()).toUTCString() + ' '+req.connection.remoteAddress+' - Пользователь открыл детализацию растения');
   myquery = {_id: new mongodb.ObjectID(req.params.idd)};
   // Выбираем данные по расстению
   doItDB((err, db, cli)=>{
@@ -239,6 +245,7 @@ router.get('/detail/:idd', function(req, res, next) {
 });
 
 router.get('/detail/:idd/delete/:idoper', function(req, res, next) {
+  req.ioInfo.emit('broadcast', (new Date()).toUTCString() + ' '+req.connection.remoteAddress+' - Пользователь удаляет операцию по растению');
   myquery = {_id: new mongodb.ObjectID(req.params.idoper)};
   doItDB((err, db, cli)=>{
   	if (err) {
@@ -257,11 +264,13 @@ router.get('/detail/:idd/delete/:idoper', function(req, res, next) {
 
 router.get('/exit', function(req, res, next) {
   // Выход пользователя, отзываем куку
+  req.ioInfo.emit('broadcast', (new Date()).toUTCString() + ' '+req.connection.remoteAddress+' - Пользователь вышел из системы');
   res.clearCookie('jwt');
   res.redirect('/');
 });
 
 router.post('/deluser', function(req, res, next) {
+  req.ioInfo.emit('broadcast', (new Date()).toUTCString() + ' '+req.connection.remoteAddress+' - Пользователь удаляет свою учетную запись');
   const id = getIdFromToken(req);
   myquery = {fuser: id};
   // Удаляем все записи операций пользователя

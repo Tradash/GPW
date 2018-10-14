@@ -14,6 +14,13 @@ script.
 	socket.on('infa4', (data) => {
 		document.getElementById('i4').innerHTML=data
 	});
+	socket.on('broadcast', data => {
+		document.getElementById('s5').innerHTML = document.getElementById('s4').innerHTML;
+		document.getElementById('s4').innerHTML = document.getElementById('s3').innerHTML;
+		document.getElementById('s3').innerHTML = document.getElementById('s2').innerHTML;
+		document.getElementById('s2').innerHTML = document.getElementById('s1').innerHTML;
+		document.getElementById('s1').innerHTML = data;
+	});
 .btStatus
 	label Количество пользователей всего:
 	label#i1.lbold 00000
@@ -26,4 +33,16 @@ script.
 	br
 	label Записей внесено пользователями всего:
 	label#i4.lbold 00003
+	hr
+	label Последние действия пользователей:
+	br
+	label#s1.lsmall
+	br
+	label#s2.lsmall
+	br
+	label#s3.lsmall
+	br
+	label#s4.lsmall
+	br
+	label#s5.lsmall
 		

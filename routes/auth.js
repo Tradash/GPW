@@ -7,6 +7,7 @@ const secretToken = require('../passport.js').secretToken;
 
 /* POST login. */
 router.post('/', function(req, res, next) {
+  req.ioInfo.emit('broadcast', (new Date()).toUTCString() + ' '+req.connection.remoteAddress+' - Пользователь проходит регистрацию');
   passport.authenticate('local', {session: false}, (err, user, info) => {
     //console.log('Проверка юзверя', user, info, );
     if (err || !user) {

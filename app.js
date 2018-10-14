@@ -14,23 +14,27 @@ const countUser = require('./dbprovider.js').countUser;
 const getRecordCount = require('./dbprovider.js').getRecordCount;
 
 const app = express();
-
 const http = require('http').Server(app);
 const io = require('socket.io')(http);
 http.listen(4200);
-
+// Обработка подключения websocket
 io.sockets.on('connection', (socket) => {
-  console.log('User connected', socket.conn.server.clientsCount);
-  setInterval(()=> {
-    countUser((d) => { socket.emit('infa1', d.data); });
-    socket.emit('infa2', socket.conn.server.clientsCount); 
-    getRecordCount(1, (d) => { socket.emit('infa3', d); })
-    getRecordCount(2, (d) => { socket.emit('infa4', d); })  
-  }, 10000);
-  
-  //socket.emit('infa1', countUser);
-})
-
+  const id = socket.conn.id;
+  console.log('User connected', id);
+  let intName=setInterval(()=> {
+    // Подсчет количества юзеров
+    countUser(id, (d) => socket.emit('infa1', d.data));
+    // Количество активных подключений
+    socket.emit('infa2', socket.conn.server.clientsCount);
+    // Количесто записей в БД растений
+    getRecordCount(1, (d) => socket.emit('infa3', d));
+    // Количество записей в БД движения расстений
+    getRecordCount(2, (d) => socket.emit('infa4', d));
+  }, 10000); // Обновлять каждые 10 секунд
+  // Отменить обновления при закрытие сокета
+  socket.on('disconnect', () => clearInterval(intName));
+});
+//
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
@@ -42,6 +46,12 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 passport.use(locStrtg);
 passport.use(jwtStrtg);
+
+app.use((req, res, next) => {
+  console.log('======',req.connection.remoteAddress);
+  req.ioInfo = io;
+  next();
+})
 
 app.use('/user', passport.authenticate('jwt', {session: false}), user);
 app.use('/newuser', newUser);
