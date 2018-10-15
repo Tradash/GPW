@@ -6,24 +6,25 @@ const findUser=require('./dbprovider.js').findUser;
 const crypto = require('crypto');
 const secretToken = 'MyPasswordPhrase';
 
+//  Стратегия проверки пользователя при регистрации на сайте
 const locStrtg = new LocalStrategy({
   usernameField: 'login',
   passwordField: 'password',
-},
-function(login, password, cb) {
-  findUser(login).then( (result)=> {
-    if (result.data) {
-      const hPsw = crypto.createHash('sha512')
-          .update(result.data.salt + password).digest('hex');
-      if ( hPsw === result.data.psw) {
-        return cb(null, login, {message: 'Logged In Successfully'});
+  },
+  function(login, password, cb) {
+    findUser(login).then( (result)=> {
+      if (result.data) {
+        const hPsw = crypto.createHash('sha512')
+            .update(result.data.salt + password).digest('hex');
+        if ( hPsw === result.data.psw) {
+          return cb(null, login, {message: 'Logged In Successfully'});
+        } else {
+          return cb(null, false, {message: 'Incorrect login or password.'});
+        }
       } else {
-        return cb(null, false, {message: 'Incorrect login or password.'});
+        cb(null, false, {message: 'Error DB access'});
       }
-    } else {
-      cb(null, false, {message: 'Error DB access'});
-    }
-  });
+    });
 });
 
 // Выделяем токен из куки
@@ -35,20 +36,22 @@ const getjwt=(req) => {
   return token;
 };
 
+// Стратегия проверка пользователя при входе на страницы с ограниченным доступом
 const jwtStrtg = new JWTStrategy({
   jwtFromRequest: getjwt,
   secretOrKey: secretToken,
-},
-function(jwtPayload, cb) {
-  findUser(jwtPayload.user).then( (result)=> {
-    if (result.data) {
-      return cb(null, jwtPayload);
-    } else {
-      return cb(null, false);
-    }
-  });
-}
+  },
+  function(jwtPayload, cb) {
+    findUser(jwtPayload.user).then( (result)=> {
+      if (result.data) {
+        return cb(null, jwtPayload);
+      } else {
+        return cb(null, false);
+      }
+    });
+  }
 );
+
 // Определение юзера из куки
 const getIdFromToken=(req)=> {
   let token;

@@ -17,13 +17,15 @@ const app = express();
 const http = require('http').Server(app);
 const io = require('socket.io')(http);
 http.listen(4200);
+
 // Обработка подключения websocket
 io.sockets.on('connection', (socket) => {
-  const id = socket.conn.id;
-  console.log('User connected', id);
+  //const id = socket.conn.id;
+  // console.log('User connected', id);
+  // Обновление данных по таймеру
   let intName=setInterval(()=> {
     // Подсчет количества юзеров
-    countUser(id, (d) => socket.emit('infa1', d.data));
+    countUser((d) => socket.emit('infa1', d.data));
     // Количество активных подключений
     socket.emit('infa2', socket.conn.server.clientsCount);
     // Количесто записей в БД растений
@@ -48,7 +50,8 @@ passport.use(locStrtg);
 passport.use(jwtStrtg);
 
 app.use((req, res, next) => {
-  console.log('======',req.connection.remoteAddress);
+  // Добавляем в request инфу о активном сокете
+  // console.log('======',req.connection.remoteAddress);
   req.ioInfo = io;
   next();
 })
@@ -58,7 +61,7 @@ app.use('/newuser', newUser);
 app.use('/login', auth);
 app.use('/', indexRouter);
 
-// catch 404 and forward to error handler
+// Если дошли сюда, значит нет такой страницы на сайте -> 404
 app.use(function(req, res, next) {
   next(createError(404));
 });

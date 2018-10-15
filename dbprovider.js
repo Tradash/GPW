@@ -10,21 +10,22 @@ const collUser = 'UserData';
 
 const levelDB='./ldb';
 
-//Подсчет количества записей в коллекциях
+// Подсчет количества записей в коллекциях Mongo
 const getRecordCount = (coll, cb) => {
   let result = 0
   doItDB((err, db, cli)=>{
-    db.collection(coll !== 1 ? collUser: collName).countDocuments((err, recCount) => {
-      if (!err) {
-        result = recCount;
-      }
-      cb(result);
-    });
+    db.collection(coll !== 1 ? collUser: collName)
+      .countDocuments((err, recCount) => {
+        if (!err) {
+          result = recCount;
+        };
+        cb(result);
+      });
   });
 }
 
 //Подсчет зарегистрированных пользователей в системе
-const countUser = (id, cb) => {
+const countUser = (cb) => {
   let result = {data: null, err: null};
   let db;
   var counter = 0;
@@ -33,10 +34,14 @@ const countUser = (id, cb) => {
     .on('data', () => { counter++ })
     .on('close', () => { db.close(); cb(result)})
     .on('end', () => { result.data = counter})
-    .on('error', (err) => { console.log('error');  result.err = err; db.close(); cb(result)})
+    .on('error', (err) => { 
+      console.log('Error - Ошибка при подсчете юзеров зарегистрированных');
+      result.err = err;
+      db.close(); cb(result)
+    })
 }
 
-// Поиск пользователя в БД
+// Поиск учетки пользователя в БД
 const findUser = async (name) => {
   let result = {data: null, err: null};
   let db;
@@ -50,12 +55,13 @@ const findUser = async (name) => {
   return result;
 };
 
-// Добавление пользователя в БД
+// Добавление учетки пользователя в БД
 const addUser = async (name, password) => {
   let result = {data: null, err: null};
   let db; let salt; let hashPassword;
   try {
     db = level(levelDB, {valueEncoding: 'json'});
+    // Формируем соль
     salt = Math.round((new Date().valueOf() * Math.random()))+'';
     hashPassword = crypto.createHash('sha512')
         .update(salt+password).digest('hex');
@@ -67,7 +73,7 @@ const addUser = async (name, password) => {
   return result;
 };
 
-// Удаление пользователя из БД
+// Удаление учетки пользователя из БД
 const delUser = async (name) => {
   let result = {data: null, err: null};
   try {
